@@ -13,10 +13,12 @@ abattoir-biomechanics/
 │   ├── calculator.py   # Math Engine (Models 1-4)
 │   └── visualizer.py   # Matplotlib Link-Joint Plotter
 └── assets/             # Research diagrams (Fig 4.7, 4.8)
+```
 
 ## 🚀 Installation & Usage1. Setup EnvironmentBashpython -m venv venv
 # Windows
 venv\Scripts\activate
+
 # Mac/Linux
 source venv/bin/activate
 2. Install DependenciesBashpip install -r requirements.txt
@@ -27,5 +29,3 @@ source venv/bin/activate
 ### Final Check
 * **Visualizer:** By plotting the segments, you’ll immediately see if the "Table Height" makes sense. If the wrist is higher than the shoulder but the model says the table is at 90cm, you'll know there's a sign error in the math.
 * **Streamlit:** It will now show the numbers on the left and the drawing on the right.
-
-**Would you like me to help you audit the "Deboning" (Model 3 & 4) math next, or are you ready to test the visualizer?**
