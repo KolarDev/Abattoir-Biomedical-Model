@@ -1,4 +1,36 @@
+# --- Environment & Dependencies ---
 venv/
+env/
 .env
+bin/
+lib/
+share/
+Include/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# --- Python Bytecode & Cache ---
 __pycache__/
-*.pyc
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+
+# --- Data & Large Files (Biomechanics Specific) ---
+# Ignore large raw data files or temporary simulation outputs
+*.csv
+*.mat
+*.dat
+*.log
+!metadata.csv  # Example: Keep metadata but ignore raw data
+
+# --- OS & IDE Specific ---
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# --- Distribution / Packaging ---
+dist/
+build/
+*.egg-info/
