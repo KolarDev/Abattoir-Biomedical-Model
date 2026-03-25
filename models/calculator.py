@@ -1,23 +1,12 @@
 import numpy as np
 
+# --- CASE I: CUTTING (Model 1 & 2) ---
 def calculate_model_1(sel, ewl, hl, sh, a_deg, q_deg):
-    """
-    Horizontal Distance of Table Height (THh)
-    """
-    A = np.radians(a_deg)
-    Q = np.radians(q_deg)
-
-    # Corrected term1: Uses (EWL + 0.5HL) and the Law of Cosines
-    term1 = np.sqrt(
-        sel**2 + 
-        (ewl + 0.5 * hl)**2 - 
-        2 * sel * (ewl + 0.5 * hl) * np.cos(A)
-    )
-
-    # Corrected term2: Horizontal projection of the shoulder
-    # Note: cos(180 - Q) is -cos(Q)
-    term2 = sh * np.cos(np.pi - Q) 
-
+    """Horizontal Distance of Table Height (THh)"""
+    A, Q = np.radians(a_deg), np.radians(q_deg)
+    # Vector: HRP_x -> Shoulder_x -> Table_x
+    term1 = np.sqrt(sel**2 + (ewl + 0.5 * hl)**2 - 2 * sel * (ewl + 0.5 * hl) * np.cos(A))
+    term2 = sh * np.cos(np.pi - Q)
     return term1 - term2
 
 def calculate_model_2(sh, q_deg):
@@ -25,27 +14,22 @@ def calculate_model_2(sh, q_deg):
     Q = np.radians(q_deg)
     return sh * np.sin(Q)
 
+# --- CASE II: DEBONING (Model 3 & 4) ---
+# Rebuilt using Vector Kinematics: HRP -> Shoulder -> Elbow
 def calculate_model_3(sel, sh, q_deg, theta_deg):
-    """Horizontal Elbow Position (EHh)"""
-
-    Q = np.radians(q_deg)
-    theta = np.radians(theta_deg)
-
-    shoulder_x = sh * np.cos(np.pi - Q)
-
-    elbow_x = shoulder_x + sel * np.cos(theta - np.pi/2)
-
-    return elbow_x
-
+    """Horizontal distance of Elbow (EHh)"""
+    Q, theta = np.radians(q_deg), np.radians(theta_deg)
+    # 1. Locate Shoulder X
+    sx = sh * np.cos(np.pi - Q)
+    # 2. Offset by Upper Arm projection
+    ex = sx + sel * np.cos(theta - np.pi/2)
+    return ex
 
 def calculate_model_4(sel, sh, q_deg, theta_deg):
-    """Vertical Elbow Position (EHv)"""
-
-    Q = np.radians(q_deg)
-    theta = np.radians(theta_deg)
-
-    shoulder_y = sh * np.sin(np.pi - Q)
-
-    elbow_y = shoulder_y - sel * np.sin(theta - np.pi/2)
-
-    return elbow_y
+    """Vertical distance of Elbow (EHv)"""
+    Q, theta = np.radians(q_deg), np.radians(theta_deg)
+    # 1. Locate Shoulder Y
+    sy = sh * np.sin(np.pi - Q)
+    # 2. Offset by Upper Arm projection
+    ey = sy - sel * np.sin(theta - np.pi/2)
+    return ey
