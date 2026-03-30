@@ -1,35 +1,45 @@
 import numpy as np
 
 # --- CASE I: CUTTING (Model 1 & 2) ---
-def calculate_model_1(sel, ewl, hl, sh, a_deg, q_deg):
-    """Horizontal Distance of Table Height (THh)"""
-    A, Q = np.radians(a_deg), np.radians(q_deg)
-    # Vector: HRP_x -> Shoulder_x -> Table_x
-    term1 = np.sqrt(sel**2 + (ewl + 0.5 * hl)**2 - 2 * sel * (ewl + 0.5 * hl) * np.cos(A))
-    term2 = sh * np.cos(np.pi - Q)
+def calculate_model_1(sel, ewl, hl, sh, theta_deg, q_deg):
+    """Horizontal Distance of Table Height (THh / p)"""
+    Q = np.radians(q_deg)
+    theta = np.radians(theta_deg)
+    L2 = ewl + 0.5 * hl
+    
+    # Expanded Formula: SH*cos(180-Q) + (SEL + L2)*cos(theta-90)
+    term1 = sh * np.cos(np.pi - Q)
+    term2 = (sel + L2) * np.cos(theta - np.pi/2)
+    return term1 + term2
+
+def calculate_model_2(sel, ewl, hl, sh, theta_deg, q_deg):
+    """Vertical Distance of Table Height (THv / h)"""
+    Q = np.radians(q_deg)
+    theta = np.radians(theta_deg)
+    L2 = ewl + 0.5 * hl
+    
+    # Expanded Formula: SH*sin(180-Q) - (SEL + L2)*sin(theta-90)
+    term1 = sh * np.sin(np.pi - Q)
+    term2 = (sel + L2) * np.sin(theta - np.pi/2)
     return term1 - term2
 
-def calculate_model_2(sh, q_deg):
-    """Vertical Distance of Table Height (THv)"""
-    Q = np.radians(q_deg)
-    return sh * np.sin(Q)
-
 # --- CASE II: DEBONING (Model 3 & 4) ---
-# Rebuilt using Vector Kinematics: HRP -> Shoulder -> Elbow
 def calculate_model_3(sel, sh, q_deg, theta_deg):
-    """Horizontal distance of Elbow (EHh)"""
-    Q, theta = np.radians(q_deg), np.radians(theta_deg)
-    # 1. Locate Shoulder X
-    sx = sh * np.cos(np.pi - Q)
-    # 2. Offset by Upper Arm projection
-    ex = sx + sel * np.cos(theta - np.pi/2)
-    return ex
+    """Horizontal distance of Elbow Height (EHh / w)"""
+    Q = np.radians(q_deg)
+    theta = np.radians(theta_deg)
+    
+    # Expanded Formula: SH*cos(180-Q) + SEL*cos(theta-90)
+    term1 = sh * np.cos(np.pi - Q)
+    term2 = sel * np.cos(theta - np.pi/2)
+    return term1 + term2
 
 def calculate_model_4(sel, sh, q_deg, theta_deg):
-    """Vertical distance of Elbow (EHv)"""
-    Q, theta = np.radians(q_deg), np.radians(theta_deg)
-    # 1. Locate Shoulder Y
-    sy = sh * np.sin(np.pi - Q)
-    # 2. Offset by Upper Arm projection
-    ey = sy - sel * np.sin(theta - np.pi/2)
-    return ey
+    """Vertical distance of Elbow Height (EHv / q)"""
+    Q = np.radians(q_deg)
+    theta = np.radians(theta_deg)
+    
+    # Expanded Formula: SH*sin(180-Q) - SEL*sin(theta-90)
+    term1 = sh * np.sin(np.pi - Q)
+    term2 = sel * np.sin(theta - np.pi/2)
+    return term1 - term2
